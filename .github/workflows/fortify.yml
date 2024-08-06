@@ -68,6 +68,10 @@ jobs:
         run: mvn clean install
       - name: Run chmod
         run: chmod -R 777 target
+      - name: Run post maven Bash script
+        run: ls -ltrh 
+      - name: Run target script
+        run: ls -ltrh target/        
       # Start Fortify on Demand SAST scan and wait until results complete. For more information on FoDUploader commands, see https://github.com/fod-dev/fod-uploader-java
       # TODO: Update ENV variables for your application and create the necessary GitHub Secrets.  Helpful hints:
       #   Credentials and release ID should be obtained from your FoD tenant (either Personal Access Token or API Key can be used).
