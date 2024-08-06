@@ -48,6 +48,8 @@ jobs:
         with:
           java-version: 11
           distribution: 'zulu'
+      - name: Run Bash script
+        run: ls -ltrh           
 
       # Prepare source+dependencies for upload. The default example is for a Maven project that uses pom.xml.
       # TODO: Update PACKAGE_OPTS based on the ScanCentral Client documentation for your project's included tech stack(s). Helpful hints:
@@ -62,7 +64,10 @@ jobs:
         run: scancentral package $PACKAGE_OPTS -o package.zip
         env:
           PACKAGE_OPTS: "-bt none"
-
+      - name: Run maven
+        run: mvn clean install
+      - name: Run chmod
+        run: chmod -R 777 target
       # Start Fortify on Demand SAST scan and wait until results complete. For more information on FoDUploader commands, see https://github.com/fod-dev/fod-uploader-java
       # TODO: Update ENV variables for your application and create the necessary GitHub Secrets.  Helpful hints:
       #   Credentials and release ID should be obtained from your FoD tenant (either Personal Access Token or API Key can be used).
@@ -83,7 +88,8 @@ jobs:
           FOD_RELEASE_ID: ${{ secrets.FOD_RELEASE_ID }}
           FOD_UPLOADER_OPTS: "-ep SingleScanOnly -pp 2 -I 0 -apf"
           FOD_UPLOADER_NOTES: 'Triggered by GitHub Actions (${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})'
-
+      - name: Run Bash script
+        run: ls -ltrh  
       # Once scan completes, pull SAST issues from Fortify on Demand and generate SARIF output.
     #  - name: Export results to GitHub-optimized SARIF
       #  uses: fortify/gha-export-vulnerabilities@fcb374411cff9809028c911dabb8b57dbdae623b
